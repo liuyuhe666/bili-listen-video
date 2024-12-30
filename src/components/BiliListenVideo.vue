@@ -3,6 +3,12 @@ import { ref } from 'vue'
 
 const bvid = ref('')
 const audioUrl = ref('')
+const picUrl = ref('')
+const showControlPanel = ref(false)
+
+function toggleControlPanel() {
+  showControlPanel.value = !showControlPanel.value
+}
 
 async function getVideoInfo(bvid: string) {
   if (bvid) {
@@ -23,7 +29,8 @@ async function getVideoStream(bvid: string, cid: string) {
 async function handleClick() {
   const videoInfo = await getVideoInfo(bvid.value)
   if (videoInfo) {
-    const { cid = '' } = videoInfo
+    const { cid = '', pic = '' } = videoInfo
+    picUrl.value = pic
     const videoStream = await getVideoStream(bvid.value, cid)
     const { dash = {} } = videoStream
     if (dash) {
@@ -41,22 +48,27 @@ async function handleClick() {
   <div class="bili-listen-video-container">
     <h2>哔哩哔哩 (゜-゜)つロ 干杯~</h2>
     <div>
-      <input v-model="bvid" type="text" placeholder="请输入视频 bvid" class="bili-listen-video-input" >
-      <button type="button" @click="handleClick" class="bili-listen-video-button">
+      <input v-model="bvid" type="text" placeholder="请输入视频 bvid" class="bili-listen-video-input">
+      <button type="button" class="bili-listen-video-button" @click="handleClick">
         听视频
       </button>
     </div>
-    <video v-if="audioUrl.length" controls autoplay loop :src="audioUrl" />
+    <div v-if="audioUrl.length" class="video-container" @click="toggleControlPanel">
+      <video :controls="showControlPanel" autoplay loop :src="audioUrl" :poster="picUrl" />
+    </div>
   </div>
 </template>
 
 <style scoped>
 .bili-listen-video-container {
   display: flex;
-  gap: 8px;
+  gap: 20px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+.bili-listen-video-container h2 {
+  color: #fff;
 }
 .bili-listen-video-input {
   padding: 8px;
@@ -66,5 +78,15 @@ async function handleClick() {
   padding: 8px;
   background-color: #007AFF;
   color: #fff;
+}
+.video-container {
+  width: 960px;
+  height: 540px;
+}
+
+.video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
 }
 </style>
