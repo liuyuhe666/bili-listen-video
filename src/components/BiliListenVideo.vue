@@ -3,6 +3,9 @@ import { ref } from 'vue'
 
 const bvid = ref('')
 const audioUrl = ref('')
+const styleObject = ref({
+  backgroundImage: 'url(/bg.webp)',
+})
 
 async function getVideoInfo(bvid: string) {
   if (bvid) {
@@ -23,7 +26,10 @@ async function getVideoStream(bvid: string, cid: string) {
 async function handleClick() {
   const videoInfo = await getVideoInfo(bvid.value)
   if (videoInfo) {
-    const { cid = '' } = videoInfo
+    const { cid = '', pic = '' } = videoInfo
+    styleObject.value = {
+      backgroundImage: `url(https://my-api-by-deno.deno.dev/api/proxy?url=${pic})`,
+    }
     const videoStream = await getVideoStream(bvid.value, cid)
     const { dash = {} } = videoStream
     if (dash) {
@@ -38,8 +44,8 @@ async function handleClick() {
 </script>
 
 <template>
-  <div class="h-full bg-[url('/bg.webp')] bg-cover bg-center">
-    <div class="container mx-auto h-full flex items-center justify-center flex-col">
+  <div class="h-full bg-cover bg-center" :style="styleObject">
+    <div class="w-full h-full flex items-center justify-center flex-col backdrop-blur-sm">
       <div class="p-2">
         <h2 class="text-2xl font-semibold py-4 text-white">
           哔哩哔哩 (゜-゜)つロ 干杯~
@@ -51,7 +57,7 @@ async function handleClick() {
           </button>
         </div>
       </div>
-      <div v-if="audioUrl.length" class="p-2">
+      <div v-if="audioUrl.length" class="flex flex-col p-2 justify-center items-center">
         <audio controls autoplay loop :src="audioUrl" />
       </div>
     </div>
