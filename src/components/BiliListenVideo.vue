@@ -6,10 +6,11 @@ const audioUrl = ref('')
 const styleObject = ref({
   backgroundImage: 'url(/bg.webp)',
 })
+const apiUrl = import.meta.env.VITE_API_URL
 
 async function getVideoInfo(bvid: string) {
   if (bvid) {
-    const response = await fetch(`https://my-api-by-deno.deno.dev/api/bili/video/info/${bvid}`)
+    const response = await fetch(`${apiUrl}/api/bili/video/info/${bvid}`)
     const { data = {} } = await response.json()
     return data
   }
@@ -17,7 +18,7 @@ async function getVideoInfo(bvid: string) {
 
 async function getVideoStream(bvid: string, cid: string) {
   if (bvid && cid) {
-    const response = await fetch(`https://my-api-by-deno.deno.dev/api/bili/video/stream/${bvid}/${cid}`)
+    const response = await fetch(`${apiUrl}/api/bili/video/stream/${bvid}/${cid}`)
     const { data = {} } = await response.json()
     return data
   }
@@ -28,7 +29,7 @@ async function handleClick() {
   if (videoInfo) {
     const { cid = '', pic = '' } = videoInfo
     styleObject.value = {
-      backgroundImage: `url(https://my-api-by-deno.deno.dev/api/proxy?url=${pic})`,
+      backgroundImage: `url(${apiUrl}/api/proxy?url=${pic}),url(/bg.webp)`,
     }
     const videoStream = await getVideoStream(bvid.value, cid)
     const { dash = {} } = videoStream
