@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Audio } from '../api/bili'
 import { ref } from 'vue'
 import { toast } from 'vue3-toastify'
 import { apiUrl, getVideoInfo, getVideoStream } from '../api/bili'
@@ -78,11 +79,8 @@ function toggleMode() {
 }
 
 async function handleAudioFinish() {
-  let audio: Audio = null
-  if (mode.value === 'single') {
-    audio = audioList[currentIndex.value]
-  }
-  else if (mode.value === 'list') {
+  let audio: Audio = audioList[currentIndex.value]
+  if (mode.value === 'list') {
     currentIndex.value = (currentIndex.value + 1) % audioList.length
     audio = audioList[currentIndex.value]
   }
