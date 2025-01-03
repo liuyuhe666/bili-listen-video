@@ -5,6 +5,7 @@ export interface Audio {
   bvid: string
   cid: string
   pic: string
+  page: number
 }
 
 export async function getVideoInfo(bvid: string) {
