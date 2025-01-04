@@ -11,6 +11,7 @@ export const useAudioListStore = defineStore('audioList', () => {
     if (data) {
       audioList.value = JSON.parse(data)
     }
+    return audioList.value
   }
   function addAudio(audio: Audio) {
     audioList.value.push(audio)
